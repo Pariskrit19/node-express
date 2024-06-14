@@ -1,21 +1,14 @@
 import express from "express";
-import dotenv from "dotenv";
-import userRoutes from "./routes/users.js";
-import { isAuthenticated } from "./middlewares/userAuthenticatedMiddleware.js";
+import ExpressApp from "./src/services/ExpressApp.js";
 
-const app = express();
+const startServer = async () => {
+  const app = express();
 
-// Load environment variables
-dotenv.config({ path: "./dev.env" });
+  await ExpressApp(app);
 
-app.use(isAuthenticated);
+  app.listen(process.env.PORT, () =>
+    console.log(`Running sucessfully in ${process.env.PORT}`)
+  );
+};
 
-app.use("/users", userRoutes);
-
-app.use("*", (req, res) => {
-  res.status(404).json({
-    message: `Can't find ${req.originalUrl} this route`,
-  });
-});
-
-export default app;
+startServer();
