@@ -1,12 +1,7 @@
-import AppError from "../utils/AppError.js";
+import { TODOS } from "../models/Todo.js";
 import { asyncMiddleware } from "../utils/asyncMiddleware.js";
+import AppError from "../utils/AppError.js";
 import { v4 as uuidv4 } from "uuid";
-
-// Mock database
-const TODOS = [
-  { id: 1, task: "Wash clothes" },
-  { id: 2, task: "Go for run" },
-];
 
 const getTodos = asyncMiddleware((req, res) => {
   res.status(200).json(TODOS);
@@ -30,6 +25,13 @@ const updateTodo = asyncMiddleware((req, res) => {
 
   const index = findTodoIndex(todoIdToUpdate);
 
+  // No todo present of the Id
+  if (index < 0)
+    throw new AppError(
+      `Cannot update todo. No todo found of the id ${todoIdToUpdate}`,
+      400
+    );
+
   // Update the Todo in that index with a new Todo
   TODOS.splice(index, 1, { id: todoIdToUpdate, task });
   res.status(200).json(TODOS);
@@ -41,8 +43,11 @@ const deleteTodo = asyncMiddleware((req, res) => {
   const index = findTodoIndex(todoIdToUpdate);
 
   // No todo present of the Id
-  if (index < -1)
-    throw new AppError(`No todo found of the id ${todoIdToUpdate}`, 400);
+  if (index < 0)
+    throw new AppError(
+      `Cannot delete todo. No todo found of id ${todoIdToUpdate}`,
+      400
+    );
 
   // delete from TODOS
   TODOS.splice(index, 1);

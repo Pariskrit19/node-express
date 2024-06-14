@@ -13,7 +13,7 @@ export default async (app) => {
     })
   );
 
-  app.use("/api/v1/todo", todoRoutes);
+  app.use("/api/todos", todoRoutes);
 
   // If no Routes match
   app.use("*", (req, res) => {

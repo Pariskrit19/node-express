@@ -8,8 +8,8 @@ import {
 const router = express.Router();
 
 router.get("/", getTodos);
-router.post("/create", addTodo);
-router.put("/update/:id", updateTodo);
+router.post("/", addTodo);
+router.put("/:id", updateTodo);
 router.delete("/:id", deleteTodo);
 
 export default router;
